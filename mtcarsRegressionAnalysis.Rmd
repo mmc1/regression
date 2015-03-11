@@ -11,6 +11,16 @@ output:
 
 
 #The MotorTrend Cars Dataset
+```{r echo=FALSE}
+data(mtcars)
+df <- mtcars
+df$cyl.factor  <- as.factor(df$cyl)
+df$am <- as.factor(df$am)
+df$vs  <- as.factor(df$vs)
+df$gear.factor <- as.factor(df$gear)
+
+```
+
 
 
 #Analysis
