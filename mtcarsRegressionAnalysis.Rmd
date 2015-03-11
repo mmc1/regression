@@ -1,0 +1,42 @@
+---
+title: "Automobile Transmission Type and Miles Per Gallon"
+author: "Michael M. Clark"
+date: "March 11, 2015"
+output:
+  pdf_document: 
+    fig_caption: yes
+---
+
+#Executive Summary
+
+
+#The MotorTrend Cars Dataset
+
+
+#Analysis
+
+
+
+#Conclusions
+
+
+#Appendix
+
+
+
+```{r}
+summary(cars)
+```
+
+You can also embed plots, for example:
+
+```{r, echo=FALSE}
+plot(cars)
+```
+
+```{r mns-hist, echo=FALSE, fig.width=5, fig.height=3, fig.cap="Sample figure caption"}
+maintxt <- c(paste("samples of size =", sample.size, "from the exp. dist."), paste("lambda = ", format(lambda, digits=2), ", theoretical mean = ", format(1/lambda, digits=2)))
+xlabel <- "sample mean"
+hist(mns, breaks=100, main=maintxt, xlab=xlabel)
+abline(v=1/lambda, col="red", lwd=3)
+```
