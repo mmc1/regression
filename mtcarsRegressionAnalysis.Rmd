@@ -8,7 +8,7 @@ output:
 ---
 
 #Executive Summary
-This brief report explores the questions, "Is an automatic or manual transmission better for MPG?" and "How different is the MPG between automatic and manual transmission?" To answer these questions, data from the 1974 Motor Trend magazine on 32 automobiles were analyzed to look for trends relating fuel economy (i.e. MPG) to transmission type. The  
+This brief report explores the questions, "Is an automatic or manual transmission better for MPG?" and "How different is the MPG between automatic and manual transmission?" To answer these questions, data from the 1974 Motor Trend magazine on 32 automobiles were analyzed to look for trends relating fuel economy (i.e. MPG) to transmission type. A quick look at the data shows that median MPG of manual transmission vehicles is higher than that of automatic transmission vehicles, suggesting that manual transmission is better for fuel economy. However the most important factor appears to be vehicle weight, with lower-weight vehicles having higher fuel economy. Most of the lower-weight vehicles in the Motor Trend data were also manual transmission vehicles.
 
 #The MotorTrend Cars Dataset
 ```{r echo=FALSE}
@@ -61,17 +61,18 @@ pairs(mtcars, panel = panel.smooth, main = "Motor Trend 1974 Cars Data")
 #Analysis
 
 ```{r echo=FALSE}
-lm1 <- lm(mpg ~ am, data=df)
-summary(lm1)
+lm1 <- lm(mpg ~ trans, data=df)
+summary(lm1)$coeff
 
 lm2 <- lm(mpg ~ wt, data=df)
-summary(lm2)
+summary(lm2)$coeff
 
-lm3 <- lm(mpg ~ wt + wt*am, data=df)
-summary(lm3)
+lm3 <- lm(mpg ~ wt + wt*trans, data=df)
+summary(lm3)$coeff
 
-lm4 <- lm(mpg ~ wt + cyl.factor + wt*am, data=df)
-summary(lm4)
+lm4 <- lm(mpg ~ wt + cyl.factor + wt*trans, data=df)
+summary(lm4)$coeff
+
 
 plot(lm2)
 
