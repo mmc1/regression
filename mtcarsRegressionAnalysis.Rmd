@@ -1,5 +1,5 @@
 ---
-title: "Automobile Transmission Type and Miles Per Gallon"
+title: "Fuel Economy and Automobile Transmission Type"
 author: "Michael M. Clark"
 date: "March 11, 2015"
 output:
@@ -8,16 +8,51 @@ output:
 ---
 
 #Executive Summary
-
+This brief report explores the questions, "Is an automatic or manual transmission better for MPG?" and "How different is the MPG between automatic and manual transmission?" To answer these questions, data from the 1974 Motor Trend magazine on 32 automobiles were analyzed to look for trends relating fuel economy (i.e. MPG) to transmission type. The  
 
 #The MotorTrend Cars Dataset
 ```{r echo=FALSE}
 data(mtcars)
+require(graphics)
 df <- mtcars
 df$cyl.factor  <- as.factor(df$cyl)
 df$am <- as.factor(df$am)
 df$vs  <- as.factor(df$vs)
 df$gear.factor <- as.factor(df$gear)
+df$trans <- "x"
+df$trans[which(df$am==0)] <- "Automatic"
+df$trans[which(df$am==1)] <- "Manual"
+df$trans <- as.factor(df$trans)
+
+
+
+par(mfrow=c(2, 3))
+plot(df$trans, df$mpg, ylab="miles per gallon")
+plot(df$cyl.factor, df$mpg, xlab="# of cylinders", ylab="miles per gallon")
+plot(df$gear.factor, df$mpg, xlab="# forward gears", ylab="miles per gallon")
+
+plot(df$wt, df$mpg, xlab="weight, 1000lbs", ylab="miles per gallon", col=mtcars$am+1, pch=15)
+lm2 <- lm(mpg ~ wt, data=df)
+abline(lm2, lwd=3, lty=2)
+legend("topright", pch=15, legend=c("automatic", "manual"), col=c(1, 2))
+
+plot(df$wt, df$mpg, xlab="weight, 1000lbs", ylab="miles per gallon", col=mtcars$cyl/2, pch=15)
+lm2 <- lm(mpg ~ wt, data=df)
+abline(lm2, lwd=3, lty=2)
+legend("topright", pch=15, legend=c("4-cylinder", "6-cylinder", "8-cylinder"), col=c(2, 3, 4))
+
+plot(df$hp, df$mpg, xlab="gross horsepower", ylab="miles per gallon",col=mtcars$am+1, pch=15)
+lm3 <- lm(mpg ~ hp, data=df)
+abline(lm3, lwd=3, lty=2)
+legend("topright", pch=15, legend=c("automatic", "manual"), col=c(1, 2))
+
+plot(df$qsec, df$mpg, xlab="1/4 mile time, sec", ylab="miles per gallon",col=mtcars$am+1, pch=15)
+lm4 <- lm(mpg ~ qsec, data=df)
+abline(lm4, lwd=3, lty=2)
+legend("topright", pch=15, legend=c("automatic", "manual"), col=c(1, 2))
+
+
+pairs(mtcars, panel = panel.smooth, main = "Motor Trend 1974 Cars Data")
 
 ```
 
@@ -25,7 +60,22 @@ df$gear.factor <- as.factor(df$gear)
 
 #Analysis
 
+```{r echo=FALSE}
+lm1 <- lm(mpg ~ am, data=df)
+summary(lm1)
 
+lm2 <- lm(mpg ~ wt, data=df)
+summary(lm2)
+
+lm3 <- lm(mpg ~ wt + wt*am, data=df)
+summary(lm3)
+
+lm4 <- lm(mpg ~ wt + cyl.factor + wt*am, data=df)
+summary(lm4)
+
+plot(lm2)
+
+```
 
 #Conclusions
 
@@ -35,7 +85,7 @@ df$gear.factor <- as.factor(df$gear)
 
 
 ```{r}
-summary(cars)
+
 ```
 
 You can also embed plots, for example:
