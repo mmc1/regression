@@ -3,8 +3,9 @@ title: "Fuel Economy and Automobile Transmission Type"
 author: "Michael M. Clark"
 date: "March 11, 2015"
 output:
-  pdf_document: 
+  pdf_document:
     fig_caption: yes
+  html_document: default
 ---
 
 #Executive Summary
@@ -24,35 +25,40 @@ df$trans[which(df$am==0)] <- "Automatic"
 df$trans[which(df$am==1)] <- "Manual"
 df$trans <- as.factor(df$trans)
 
+```
 
 
+
+```{r exploratory, echo=FALSE, fig.width=6, fig.height=6, fig.cap="Data from the 1974 Motor Trend magazine. A) a boxplot of fuel economy by transmission type indicates that manual transmission vehicles on average have better fuel economy than automatic transmission vehicles. B) a boxplot of fuel economy by # of cylinders indicates that cars with fewer cylinders have better fuel economy. C) a plot of fuel economy by # of forward gears shows a non-monotonic trend. D) a plot of fuel economy vs. weight shows a clear trend of decreasing fuel economy with increasing weight in both manual transmission cars and automatic transmission cars. The average weight of manual transmission cars is lower the average weight of automatic transmission cars. E) a plot of fuel economy vs. weight showing decreasing fuel economy with increasing weight for cars with 4, 6, and 8 cylinder engines. F) a plot of fuel economy vs. horsepower shows decreasing fuel economy with increasing horsepower for both manual and automatic transmission vehicles."}
 par(mfrow=c(2, 3))
-plot(df$trans, df$mpg, ylab="miles per gallon")
-plot(df$cyl.factor, df$mpg, xlab="# of cylinders", ylab="miles per gallon")
-plot(df$gear.factor, df$mpg, xlab="# forward gears", ylab="miles per gallon")
+plot(df$trans, df$mpg, ylab="miles per gallon", main="A")
+plot(df$cyl.factor, df$mpg, xlab="# of cylinders", ylab="miles per gallon", main="B")
+plot(df$gear.factor, df$mpg, xlab="# forward gears", ylab="miles per gallon", main="C")
 
-plot(df$wt, df$mpg, xlab="weight, 1000lbs", ylab="miles per gallon", col=mtcars$am+1, pch=15)
+plot(df$wt, df$mpg, xlab="weight, 1000lbs", ylab="miles per gallon", col=mtcars$am+1, pch=15, main="D")
 lm2 <- lm(mpg ~ wt, data=df)
 abline(lm2, lwd=3, lty=2)
-legend("topright", pch=15, legend=c("automatic", "manual"), col=c(1, 2))
+abline(v=mean(df$wt[which(df$am==1)]), col="red", lty=2)
+abline(v=mean(df$wt[which(df$am==0)]), col="black", lty=2)
+legend("topright", pch=c(15, -1, 15, -1), legend=c("automatic", "avg wt", "manual", "avg wt"), col=c(1, 1, 2, 2), lty=c(0, 2, 0, 2), bg="white")
 
-plot(df$wt, df$mpg, xlab="weight, 1000lbs", ylab="miles per gallon", col=mtcars$cyl/2, pch=15)
+plot(df$wt, df$mpg, xlab="weight, 1000lbs", ylab="miles per gallon", col=mtcars$cyl/2, pch=15, main="E")
 lm2 <- lm(mpg ~ wt, data=df)
 abline(lm2, lwd=3, lty=2)
 legend("topright", pch=15, legend=c("4-cylinder", "6-cylinder", "8-cylinder"), col=c(2, 3, 4))
 
-plot(df$hp, df$mpg, xlab="gross horsepower", ylab="miles per gallon",col=mtcars$am+1, pch=15)
+plot(df$hp, df$mpg, xlab="gross horsepower", ylab="miles per gallon",col=mtcars$am+1, pch=15, main="F")
 lm3 <- lm(mpg ~ hp, data=df)
 abline(lm3, lwd=3, lty=2)
 legend("topright", pch=15, legend=c("automatic", "manual"), col=c(1, 2))
 
-plot(df$qsec, df$mpg, xlab="1/4 mile time, sec", ylab="miles per gallon",col=mtcars$am+1, pch=15)
-lm4 <- lm(mpg ~ qsec, data=df)
-abline(lm4, lwd=3, lty=2)
-legend("topright", pch=15, legend=c("automatic", "manual"), col=c(1, 2))
+#plot(df$qsec, df$mpg, xlab="1/4 mile time, sec", ylab="miles per gallon",col=mtcars$am+1, pch=15)
+#lm4 <- lm(mpg ~ qsec, data=df)
+#abline(lm4, lwd=3, lty=2)
+#legend("topright", pch=15, legend=c("automatic", "manual"), col=c(1, 2))
 
 
-pairs(mtcars, panel = panel.smooth, main = "Motor Trend 1974 Cars Data")
+#pairs(mtcars, panel = panel.smooth, main = "Motor Trend 1974 Cars Data")
 
 ```
 
@@ -85,19 +91,4 @@ plot(lm2)
 
 
 
-```{r}
 
-```
-
-You can also embed plots, for example:
-
-```{r, echo=FALSE}
-plot(cars)
-```
-
-```{r mns-hist, echo=FALSE, fig.width=5, fig.height=3, fig.cap="Sample figure caption"}
-maintxt <- c(paste("samples of size =", sample.size, "from the exp. dist."), paste("lambda = ", format(lambda, digits=2), ", theoretical mean = ", format(1/lambda, digits=2)))
-xlabel <- "sample mean"
-hist(mns, breaks=100, main=maintxt, xlab=xlabel)
-abline(v=1/lambda, col="red", lwd=3)
-```
