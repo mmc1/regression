@@ -7,11 +7,6 @@ output:
     fig_caption: yes
   html_document: default
 ---
-
-#Executive Summary
-This brief report explores the questions, "Is an automatic or manual transmission better for MPG?" and "How different is the MPG between automatic and manual transmission?" To answer these questions, data from the 1974 Motor Trend magazine on 32 automobiles were analyzed to look for trends relating fuel economy (i.e. MPG) to transmission type. A quick look at the data shows that median MPG of manual transmission vehicles is higher than that of automatic transmission vehicles, suggesting that manual transmission is better for fuel economy. However the most important factor appears to be vehicle weight, with lower-weight vehicles having higher fuel economy. Most of the lower-weight vehicles in the Motor Trend data were also manual transmission vehicles.
-
-#The MotorTrend Cars Dataset
 ```{r echo=FALSE}
 data(mtcars)
 require(graphics)
@@ -24,11 +19,19 @@ df$trans <- "x"
 df$trans[which(df$am==0)] <- "Automatic"
 df$trans[which(df$am==1)] <- "Manual"
 df$trans <- as.factor(df$trans)
-
+mpg.mt.mean <- mean(df$mpg[which(df$am==1)])
+mpg.mt.median <- median(df$mpg[which(df$am==1)])
+mpg.at.mean <- mean(df$mpg[which(df$am==0)])
+mpg.at.median <- median(df$mpg[which(df$am==0)])
 ```
+#Executive Summary
+This brief report explores the questions, "Is an automatic or manual transmission better for MPG?" and "How different is the MPG between automatic and manual transmission?" To answer these questions, data from the 1974 Motor Trend magazine on 32 automobiles were analyzed to look for trends relating fuel economy (i.e. MPG) to transmission type. A quick look at the data shows that mean MPG of manual transmission vehicles (`r round(mpg.mt.mean, digits=3)` mpg) is higher than that of automatic transmission vehicles (`r round(mpg.at.mean, digits=3)` mpg), suggesting that manual transmission is better for fuel economy. However, the most important factor appears to be vehicle weight, with lower-weight vehicles having higher fuel economy. Most of the lower-weight vehicles in the Motor Trend data were also manual transmission vehicles.
+
+#The MotorTrend Cars Dataset
 
 
 
+#Appendix - Figures and Code
 ```{r exploratory, echo=FALSE, fig.width=6, fig.height=6, fig.cap="Data from the 1974 Motor Trend magazine. A) a boxplot of fuel economy by transmission type indicates that manual transmission vehicles on average have better fuel economy than automatic transmission vehicles. B) a boxplot of fuel economy by # of cylinders indicates that cars with fewer cylinders have better fuel economy. C) a plot of fuel economy by # of forward gears shows a non-monotonic trend. D) a plot of fuel economy vs. weight shows a clear trend of decreasing fuel economy with increasing weight in both manual transmission cars and automatic transmission cars. The average weight of manual transmission cars is lower the average weight of automatic transmission cars. E) a plot of fuel economy vs. weight showing decreasing fuel economy with increasing weight for cars with 4, 6, and 8 cylinder engines. F) a plot of fuel economy vs. horsepower shows decreasing fuel economy with increasing horsepower for both manual and automatic transmission vehicles."}
 par(mfrow=c(2, 3))
 plot(df$trans, df$mpg, ylab="miles per gallon", main="A")
