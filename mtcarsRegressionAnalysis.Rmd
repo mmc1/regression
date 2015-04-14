@@ -25,7 +25,9 @@ mpg.at.mean <- mean(df$mpg[which(df$am==0)])
 mpg.at.median <- median(df$mpg[which(df$am==0)])
 ```
 #Executive Summary
-This brief report explores the questions, "Is an automatic or manual transmission better for MPG?" and "How different is the MPG between automatic and manual transmission?" To answer these questions, data from the 1974 Motor Trend magazine on 32 automobiles were analyzed to look for trends relating fuel economy (i.e. MPG) to transmission type. A quick look at the data shows that mean MPG of manual transmission vehicles (`r round(mpg.mt.mean, digits=3)` mpg) is higher than that of automatic transmission vehicles (`r round(mpg.at.mean, digits=3)` mpg), suggesting that manual transmission is better for fuel economy. However, the most important factor appears to be vehicle weight, with lower-weight vehicles having higher fuel economy. Most of the lower-weight vehicles in the Motor Trend data were also manual transmission vehicles.
+This brief report explores the questions, "Is an automatic or manual transmission better for MPG?" and "How different is the MPG between automatic and manual transmission?" To answer these questions, data from the 1974 Motor Trend magazine on 32 automobiles were analyzed to look for trends relating fuel economy (i.e. MPG) to transmission type. The mean MPG of manual transmission vehicles (`r round(mpg.mt.mean, digits=3)` mpg) is higher than that of automatic transmission vehicles (`r round(mpg.at.mean, digits=3)` mpg), suggesting that manual transmission is better for fuel economy. However, the most important factor appears to be vehicle weight, with lower-weight vehicles having higher fuel economy. In fact almost all of the lower-weight (<3,000lbs) vehicles in the Motor Trend data were manual transmission vehicles, and almost all of the higher-weight vehicles (>3,000lbs) were automatic transmission vehicles. Recognizing the large effect of vehicle weight on MPG and the insufficient distribution of transmission types across the full range of vehicle weight in the data, we cannot with confidence determine whether tranmission type itself affects MPG. Instead we propose a model for MPG that accounts for the effects of vehicle weight and number of cylinders:
+
+MPG = beta0 + beta1*wt + beta2*
 
 #The MotorTrend Cars Dataset
 
@@ -39,11 +41,14 @@ plot(df$cyl.factor, df$mpg, xlab="# of cylinders", ylab="miles per gallon", main
 plot(df$gear.factor, df$mpg, xlab="# forward gears", ylab="miles per gallon", main="C")
 
 plot(df$wt, df$mpg, xlab="weight, 1000lbs", ylab="miles per gallon", col=mtcars$am+1, pch=15, main="D")
-lm2 <- lm(mpg ~ wt, data=df)
-abline(lm2, lwd=3, lty=2)
-abline(v=mean(df$wt[which(df$am==1)]), col="red", lty=2)
-abline(v=mean(df$wt[which(df$am==0)]), col="black", lty=2)
-legend("topright", pch=c(15, -1, 15, -1), legend=c("automatic", "avg wt", "manual", "avg wt"), col=c(1, 1, 2, 2), lty=c(0, 2, 0, 2), bg="white")
+#lm2 <- lm(mpg ~ wt, data=df)
+#abline(lm2, lwd=3, lty=2)
+abline(v=mean(df$wt[which(df$am==1)]), col="red", lty=3)
+abline(v=mean(df$wt[which(df$am==0)]), col="black", lty=3)
+legend("topright", pch=c(15, 15, -1, -1), legend=c("automatic", "manual", "avg wt", "linear fit"), col=c(1, 2, 1, 1), lty=c(0, 0, 3, 1), bg="white")
+lm5 <- lm(mpg ~ wt + trans + wt*trans, data=df)
+abline(c(lm5$coef[1], lm5$coef[2]), col="black", lty=1, lwd=1)
+abline(c(lm5$coef[1]+lm5$coef[3], lm5$coef[2]+lm5$coef[4]), col="red", lty=1, lwd=1)
 
 plot(df$wt, df$mpg, xlab="weight, 1000lbs", ylab="miles per gallon", col=mtcars$cyl/2, pch=15, main="E")
 lm2 <- lm(mpg ~ wt, data=df)
@@ -82,8 +87,29 @@ summary(lm3)$coeff
 lm4 <- lm(mpg ~ wt + cyl.factor + wt*trans, data=df)
 summary(lm4)$coeff
 
+lm5 <- lm(mpg ~ wt + trans + wt*trans, data=df)
+summary(lm5)$coeff
+
+anova(lm2, lm5)
 
 plot(lm2)
+
+lm6 <- lm(mpg ~ wt + wt*cyl.factor, df)
+summary(lm6)
+
+lm7 <- lm(mpg ~ wt + cyl.factor, df)
+summary(lm7)
+anova(lm2, lm7, lm6)
+
+plot(lm7, which=1)
+plot(lm7, which=2)
+plot(lm7, which=3)
+plot(lm7, which=4)
+plot(lm7, which=5)
+plot(lm7, which=6)
+
+shapiro.test(lm7$residuals)
+
 
 ```
 
